@@ -44,4 +44,4 @@ http://localhost:8080/Build%20a%20Swarm%20cluster%20for%20production.htm
 * Reset the machine and wait for it to come back up
 * login as root and use `ifconfig` to get the ip of the machine
 * Run `sysctl -w kernel.pax.softmode=1`
-* Start with `dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375`
+* Start with `dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 --insecure-registry 192.168.0.101:5000`
