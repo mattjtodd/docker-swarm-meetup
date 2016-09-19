@@ -33,6 +33,9 @@ Vagrant.configure("2") do |config|
   # your network.
   config.vm.network "public_network"
 
+  # disable the sync folder
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
@@ -69,8 +72,12 @@ Vagrant.configure("2") do |config|
      echo "http://dl-3.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
      apk update
      apk add docker
-     sed -i "s/DOCKER_OPTS=.*/DOCKER_OPTS='-H tcp:\\/\\/0.0.0.0:2375 -H unix:\\/\\/\\/var\\/run\\/docker.sock'/g" /etc/conf.d/docker 
+     sed -i "s/DOCKER_OPTS=.*/DOCKER_OPTS='-H tcp:\\/\\/0.0.0.0:2375 -H unix:\\/\\/\\/var\\/run\\/docker.sock'/g" /etc/conf.d/docker
      rc-update add docker boot
+     sysctl -w kernel.pax.softmode=1
      service docker start
+     sleep 5
+     adduser vagrant docker
+     echo "Bridge guest IP: "`ifconfig eth1 | awk '\/t addr:\/{gsub(\/.*:\/,"",$2);print$2}'`
    SHELL
 end

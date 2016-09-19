@@ -2,46 +2,57 @@
 
 How to play :)
 
-In order to get around the restrictions with the native apps we're going to need to install the Docker engine into a suitable Hypervisor.  These instructions are for Virtualbox.
+In order to get around the restrictions with the native apps we're going to need to install the Docker engine into a suitable Hypervisor.  These instructions are for Vagrant OSX Specific.
 
-Binaries for the workshop can be found in the following webserver:
+* Install vagrant
 
-http://192.168.14.52:8080
+```
+brew update && \
+  brew cask update && \
+  brew cask install vagrant virtualbox
+```
 
-There's a local copy of some of the later instructions available here:
+* Startup the VM
 
-http://localhost:8080/Build%20a%20Swarm%20cluster%20for%20production.htm
+```
+vagrant plugin install vagrant-alpine && vagrant up
+```
 
-* Get and install Virtualbox from the webserver for your Host
-* Download the Apline Linux ISO from the webserver
-* Create a new VM and call it `Alpine Linux Docker` or similar (Blue new explosion!), Type Linux, Version, one of the generic ones
-* Memory Size ~2G
-* Create a Virtual Disk Now
-* VDI
-* Dynamically Allocated
-* Defaults for size (8G)
-* In the right hand pannel, find the storage subsection and click on [Optical Drive],  choose the Alpine ISO.
-* Click on the settings wheel, the Network and change 'Attached To` to `Bridged Adapter`
-* Start the VM up
-* Login as `root` no password
-* in the bash prompt enter `setup-alpine`
-* All of the answers are the default except:
-* system host name: `your-name!!` This is important!
-* mirror number `13`
-* disks to use `sda`
-* how would you like to use it?  `lvmsys`
-* erase the disk `y`
-* This should take a while to format your VDI disk
-* One this is complete we're ready to install docker!!
-* `vi /etc/apk/repositories`
-* Uncomment the lines `*/edge/main` and `*/edge/communtiy`, save and exit
-* run `apk update`
-* run `apk add docker`
-* Create a user for ssh access `adduser <youruser> && adduser <youruser> docker`
-* run `halt` await completion
-* unmount the ISO CD by going back to the storgae section and clicking on the iso and removing it
-* switch onto the TP-LINK_2A*** password `tart276-byway` 
-* Reset the machine and wait for it to come back up
-* login as root and use `ifconfig` to get the ip of the machine
-* Run `sysctl -w kernel.pax.softmode=1`
-* Start with `dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 --insecure-registry 192.168.0.101:5000`
+* The last line of the output is the IP of the VM's bridge network adapter for reference.
+
+* Now start the manager and consul service locally
+
+```
+export set MANAGER_IP=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
+```
+
+This sets the IP of the manager
+
+```
+docker run -d -p 8500:8500 --name=consul progrium/consul -server -bootstrap
+```
+
+This starts the consul discovery service
+
+```
+docker run -d -p 4000:4000 swarm manage -H :4000 --advertise $MANAGER_IP:4000 consul://$MANAGER_IP:8500
+```
+
+* Start the swarm worker node
+
+```
+export set WORKER_IP=`vagrant ssh -c "ifconfig eth1" | awk '/t addr:/{gsub(/.*:/,"",$2);print$2}'`
+```
+
+This sets the VM worker guest IP
+
+```
+docker -H $$WORKER_IP run -d swarm join --advertise=$WORKER_IP:2375 consul://$MANAGER_IP:8500
+```
+
+* Check that it's all connected correctly.  You should see a single worker node with the Guest Bridge IP registered.
+
+```
+docker -H :4000 info
+```
+
