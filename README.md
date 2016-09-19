@@ -54,3 +54,9 @@ $ docker -H $$WORKER_IP run --name swarm -d swarm join --advertise=$WORKER_IP:23
 ```
 $ docker -H :4000 info
 ```
+
+* Start an ES node
+
+```
+docker -H :4000 run --rm --name es-node1 elasticsearch:2.4.0
+```
