@@ -37,14 +37,22 @@ $ export set GUEST_IP=`vagrant ssh -c "ifconfig eth1" | awk '/t addr:/{gsub(/.*:
 $ docker run --name consul -d -p 8400:8400 -p 8500:8500 -p 8600:53/udp -h node1 progrium/consul -server -bootstrap -ui-dir /ui
 ```
 
-* Start Docker Daemon
+* Set the `DOCKER_OPTS` for the Docker engine using the `CONSUL_IP` value
 
 ```
-vagrant ssh -c "sudo dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --cluster-advertise eth1:2375 --cluster-store consul://$CONSUL_IP:8500"
+vagrant ssh -c "sudo sed -i 's/DOCKER_OPTS=.*/DOCKER_OPTS=\"-H tcp:\/\/0.0.0.0:2375 -H unix:\/\/\/var\/run\/docker.sock --cluster-advertise eth1:2375 --cluster-store consul:\/\/$CONSUL_IP:8500\"/g' /etc/conf.d/docker"
 ```
 
+* Start the service running
+
+``
+vagrant ssh -c "sudo service docker start && sleep 5"
 ```
-$ docker run --name manager -d -p 4000:4000 swarm manage -H :4000 --advertise $GUEST_IP:4000 consul://$CONSUL_IP:8500
+
+* Start the manager on the guest
+
+```
+$ docker -H $GUEST_IP run --name manager -d -p 4000:4000 swarm manage -H :4000 --advertise $GUEST_IP:4000 consul://$CONSUL_IP:8500
 ```
 
 * Start the swarm worker node
@@ -56,11 +64,17 @@ $ docker -H $GUEST_IP run --name swarm -d swarm join --advertise=$GUEST_IP:2375 
 * Check that it's all connected correctly.  You should see a single worker node with the Guest Bridge IP registered.
 
 ```
-$ docker -H :4000 info
+$ docker -H $GUEST_IP:4000 info
 ```
 
 * Start an ES node
 
 ```
-docker -H $CONSUL_IP:4000 run --rm --name es-node1 elasticsearch:2.4.0
+docker -H $GUEST_IP:4000 run --rm --name es-node1 elasticsearch:2.4.0
+```
+
+* Tear it all down
+
+```
+vagrant destroy && vagrant plugin uninstall vagrant-alpine && docker stop consul && docker rm -v consul
 ```
