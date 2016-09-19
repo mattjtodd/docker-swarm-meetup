@@ -34,7 +34,7 @@ $ export set WORKER_IP=`vagrant ssh -c "ifconfig eth1" | awk '/t addr:/{gsub(/.*
 * Now start the consul service
 
 ```
-$ docker run -d -p 8400:8400 -p 8500:8500 -p 8600:53/udp -h node1 progrium/consul -server -bootstrap -ui-dir /ui
+$ docker run --name consul -d -p 8400:8400 -p 8500:8500 -p 8600:53/udp -h node1 progrium/consul -server -bootstrap -ui-dir /ui
 ```
 
 * Start the manager
