@@ -53,6 +53,12 @@ $ export set GUEST_IP=`vagrant ssh -c "ifconfig eth1" | awk '/t addr:/{gsub(/.*:
 $ docker run --name consul -d -p 8400:8400 -p 8500:8500 -p 8600:53/udp -h node1 progrium/consul -server -bootstrap -ui-dir /ui
 ```
 
+You can view the KV store Docker uses to manage the node by going to
+
+```
+http://localhost:8500/ui/#/dc1/kv/
+```
+
 * Set the `DOCKER_OPTS` for the Docker engine using the `CONSUL_IP` value
 
 ```
