@@ -76,7 +76,6 @@ Vagrant.configure("2") do |config|
      rc-update add docker boot
      sysctl -w kernel.pax.softmode=1
      service docker start
-     sleep 5
      adduser vagrant docker
      echo "Bridge guest IP: "`ifconfig eth1 | awk '\/t addr:\/{gsub(\/.*:\/,"",$2);print$2}'`
    SHELL
