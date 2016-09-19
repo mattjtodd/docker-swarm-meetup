@@ -18,17 +18,17 @@ $ brew update && \
 $ brew install  virtualbox
 ```
 
+* Startup the VM. The last line of the output is the IP of the VM's bridge network adapter for reference.
+
+```
+$ vagrant plugin install vagrant-alpine && vagrant up
+```
+
 * Set the IP of the guest and host
 
 ```
 $ export set WORKER_IP=`vagrant ssh -c "ifconfig eth1" | awk '/t addr:/{gsub(/.*:/,"",$2);print$2}'` && \
   export set MANAGER_IP=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
-```
-
-* Startup the VM. The last line of the output is the IP of the VM's bridge network adapter for reference.
-
-```
-$ vagrant plugin install vagrant-alpine && vagrant up
 ```
 
 * Now start the consul service
