@@ -72,11 +72,8 @@ Vagrant.configure("2") do |config|
      echo "http://dl-3.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
      apk update
      apk add docker
-     sed -i "s/DOCKER_OPTS=.*/DOCKER_OPTS='-H tcp:\\/\\/0.0.0.0:2375 -H unix:\\/\\/\\/var\\/run\\/docker.sock'/g" /etc/conf.d/docker
-     rc-update add docker boot
-     sysctl -w kernel.pax.softmode=1
-     service docker start
      adduser vagrant docker
+     sysctl -w kernel.pax.softmode=1
      echo "Bridge guest IP: "`ifconfig eth1 | awk '\/t addr:\/{gsub(\/.*:\/,"",$2);print$2}'`
    SHELL
 end
