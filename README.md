@@ -40,7 +40,7 @@ $ docker run --name consul -d -p 8400:8400 -p 8500:8500 -p 8600:53/udp -h node1 
 * Start Docker Daemon
 
 ```
-vagrant ssh -c 'sudo dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --cluster-advertise eth1:2375 --cluster-store consul://$CONSUL_IP:8500'
+vagrant ssh -c "sudo dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --cluster-advertise eth1:2375 --cluster-store consul://$CONSUL_IP:8500"
 ```
 
 ```
