@@ -40,13 +40,13 @@ $ docker run -d -p 8500:8500 --name=consul progrium/consul -server -bootstrap
 * Start the manager
 
 ```
-$ docker run -d -p 4000:4000 swarm manage -H :4000 --advertise $MANAGER_IP:4000 consul://$MANAGER_IP:8500
+$ docker run --name manager -d -p 4000:4000 swarm manage -H :4000 --advertise $MANAGER_IP:4000 consul://$MANAGER_IP:8500
 ```
 
 * Start the swarm worker node
 
 ```
-$ docker -H $$WORKER_IP run -d swarm join --advertise=$WORKER_IP:2375 consul://$MANAGER_IP:8500
+$ docker -H $$WORKER_IP run --name swarm -d swarm join --advertise=$WORKER_IP:2375 consul://$MANAGER_IP:8500
 ```
 
 * Check that it's all connected correctly.  You should see a single worker node with the Guest Bridge IP registered.
