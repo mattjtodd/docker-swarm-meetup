@@ -16,6 +16,10 @@ $ brew update && \
 
 * Install Virtualbox if it's not allready installed.  (Tested with 5.1.6 should work with others)
 
+```
+$ brew install  virtualbox
+```
+
 ### Easy way
 
 ```
@@ -29,10 +33,6 @@ Do some commands with the manager.....
 ```
 
 ### Descriptive way
-
-```
-$ brew install  virtualbox
-```
 
 * Startup the VM. The last line of the output is the IP of the VM's bridge network adapter for reference.
 
