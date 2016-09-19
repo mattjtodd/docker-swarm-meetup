@@ -45,7 +45,7 @@ vagrant ssh -c "sudo sed -i 's/DOCKER_OPTS=.*/DOCKER_OPTS=\"-H tcp:\/\/0.0.0.0:2
 
 * Start the service running
 
-``
+```
 vagrant ssh -c "sudo service docker start && sleep 5"
 ```
 
