@@ -4,6 +4,8 @@ How to play :)
 
 In order to get around the restrictions with the native apps we're going to need to install the Docker engine into a suitable Hypervisor.  These instructions are for Vagrant OSX Specific using Virtualbox.
 
+Clone this repo, then `cd` into it.
+
 * Install Vagrant (If needed)
 
 ```
@@ -23,7 +25,7 @@ $ brew update && \
 Do some commands with the manager.....
 
 ```
-teardown.sh
+./teardown.sh
 ```
 
 ### Descriptive way
