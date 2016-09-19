@@ -4,7 +4,7 @@ How to play :)
 
 In order to get around the restrictions with the native apps we're going to need to install the Docker engine into a suitable Hypervisor.  These instructions are for Vagrant OSX Specific using Virtualbox.
 
-* Install vagrant
+* Install Vagrant
 
 ```
 $ brew update && \
@@ -12,7 +12,7 @@ $ brew update && \
   brew cask install vagrant
 ```
 
-* Install Virtualbox if it's not allready installed tested with 5.1.6
+* Install Virtualbox if it's not allready installed.  (Tested with 5.1.6 should work with others)
 
 ```
 $ brew install  virtualbox
