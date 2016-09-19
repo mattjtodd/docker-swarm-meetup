@@ -46,7 +46,7 @@ $ docker run --name manager -d -p 4000:4000 swarm manage -H :4000 --advertise $M
 * Start the swarm worker node
 
 ```
-$ docker -H $$WORKER_IP run --name swarm -d swarm join --advertise=$WORKER_IP:2375 consul://$MANAGER_IP:8500
+$ docker -H $WORKER_IP run --name swarm -d swarm join --advertise=$WORKER_IP:2375 consul://$MANAGER_IP:8500
 ```
 
 * Check that it's all connected correctly.  You should see a single worker node with the Guest Bridge IP registered.
